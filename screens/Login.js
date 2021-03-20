@@ -8,16 +8,53 @@ class Login extends Component{
             email:'',
             password:'',
         }
+        this.onclickonListener = this.onclickonListener.bind(this)
         
     }
-    onclickonListener = (viewId) =>{
-        console.log("Alert,Button Presses is" + viewId);
-        Alert.alert("Alert,Button Presses is" + viewId);
+    onclickonListener = () =>{
+      //  console.log("Alert,Button Presses is" + viewId);
+      //  Alert.alert("Alert,Button Presses is" + viewId);
+        //var that = this;
+        const { email }  = this.state ;
+        const { password }  = this.state ;
+        const {name} = this.state;
+        const { navigate } = this.props.navigation;
+        console.log(this.state);
+        fetch('http://127.0.0.1:8000/api/login/',{
+                method:'post',
+                body:JSON.stringify({        
+                    "email" : this.state.email,
+                    "password" : this.state.password,
+            }),
+                headers:{
+                    'Accept':'application/json',
+                    'Content-Type':'application/json; charset=UTF-8'
+                }
+            })//now fetch the data. . .
+            //console.log("Body is sent")
+            .then(function(response){
+                response.json()
+                .then(function(resp){
+             //   console.log("everything is proper");
+              //  console.log(resp)
+                Alert.alert("Logged in");
+                if(resp.status === 500){
+                    navigate('Dashboard',{'Email':email});
+                    console.log("Navigation occurs",{'Email':email});
+                }else{
+                    console.log("executed else part");
+                    Alert.alert(resp);
+                    console.log(resp);
+                }
+                })
+            })
+         console.log("data is stored");
+
     }
 
     fonNoAccount= ({navigation})=> {
         console.log("Pressed");
-        this.props.navigation.navigate('Register');
+        navigate('Register');
     }
 
   /*  functionLogin = ({navigation}) =>{
@@ -64,15 +101,16 @@ class Login extends Component{
                     onChangeText={(password)=>this.setState({password})}
                     />
                 </View>
-
-                <TouchableOpacity style={[styles.buttonContainer,styles.loginButton]} onPress={()=>this.onclickonListener('login')}>
+                <TouchableOpacity style={[styles.buttonContainer,styles.loginButton]} onPress={this.onclickonListener}>
+               {/* <TouchableOpacity style={[styles.buttonContainer,styles.loginButton]} onPress={()=>this.onclickonListener()}> */}
                     <Text style={styles.loginText}>Login Here</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.buttonContainer,styles.loginButton]} >
+          {/*   <TouchableOpacity style={[styles.buttonContainer,styles.loginButton]} >
                 <Button style={styles.loginText} title="Register Here." onPress={this.fonNoAccount}></Button>
       
                 </TouchableOpacity>
+                */}
               
 
                 

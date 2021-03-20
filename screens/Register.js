@@ -5,13 +5,37 @@ class Register extends Component{
     constructor(props){
         super(props);
         this.state = {
-            email : "",
-            password :"",
-            phone : ""
+            fname :"",
+            femail : "",
+            fpassword :"",
+            result:"",
         }
     }
     onclickonListener = (viewId)=>{
-        console.log("Register Button is working")
+        console.log("Register Button is working");
+        console.log(this.state);
+        fetch('http://127.0.0.1:8000/api/register/',{
+                method:'post',
+                body:JSON.stringify({        
+                    "email" : this.state.femail,
+                    "name" : this.state.fname,
+                    "password" : this.state.fpassword,
+            }),
+                headers:{
+                    'Accept':'application/json',
+                    'Content-Type':'application/json; charset=UTF-8'
+                }
+            })//now fetch the data. . .
+            //console.log("Body is sent")
+            .then(function(response){
+                response.json().then(function(resp){
+                console.log("everything is proper");
+                console.log(resp)
+                Alert.alert("Inserted");
+                })
+            })
+         console.log("data is stored");
+
     }
     fLogin= ({navigation})=> {
         console.log("Pressed");
@@ -20,33 +44,35 @@ class Register extends Component{
     render(){
         return(
             <View style={styles.container}>
+
+            <View style={styles.inputContainer}>
+                    <TextInput style={styles.inputs}
+                    placeholder="Enter the Name"
+                    underlineColorAndroid='transparent'
+                    onChangeText={(fname)=>this.setState({fname})}
+                    />
+                </View>
+
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.inputs}
                     placeholder="Enter the Email Address"
-                    keyboardType="email-address"
-                    underlineColorAndroid='transparent'
-                    onChangeText={(email)=>this.setState({email})}
+                    underlineColorAndroid="transparent"
+                    onChangeText={(femail)=>this.setState({femail})}
                     />
                 </View>
 
                 
-                <View style={styles.inputContainer}>
-                    <TextInput style={styles.inputs}
-                    placeholder="Enter the Phone Number"
-                    keyboardType="number-pad"
-                    underlineColorAndroid='transparent'
-                    onChangeText={(phone)=>this.setState({phone})}
-                    />
-                </View>
-
+               
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.inputs}
                     placeholder="Enter the Password"
                     secureTextEntry={true}
                     underlineColorAndroid='transparent'
-                    onChangeText={(password)=>this.setState({password})}
+                    onChangeText={(fpassword)=>this.setState({fpassword})}
                     />
                 </View>
+
+              
 
                 <TouchableOpacity style={[styles.buttonContainer,styles.loginButton]} onPress={()=>this.onclickonListener('register')}>
                     <Text style={styles.loginText}>Register Here</Text>
